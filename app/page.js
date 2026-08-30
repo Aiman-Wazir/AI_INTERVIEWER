@@ -66,10 +66,10 @@ export default function Home() {
             {/* <span className="text-sm font-medium text-blue-700">AI-Powered Interview Practice</span> */}
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-extrabold leading-tight">
+          <h1 className="text-5xl md:text-4xl font-extrabold leading-tight">
             Master Your
-            <span className="gradient-text block mt-2">Interview Skills</span>
-            <span className="text-slate-700 block mt-2 text-3xl md:text-5xl">with AI</span>
+            <span className="gradient-text block mt-1">Interview Skills</span>
+            {/* <span className="text-slate-700 block mt-2 text-3xl md:text-5xl">with AI</span> */}
           </h1>
           
           <p className="text-xl text-slate-600 mt-6 max-w-2xl mx-auto leading-relaxed">
@@ -144,8 +144,8 @@ export default function Home() {
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 md:p-12">
         <div className="absolute inset-0 bg-[url('/next.svg')] opacity-10"></div>
         <div className="relative z-10 text-center text-white">
-          <Star className="w-12 h-12 mx-auto mb-4 text-yellow-300 fill-yellow-300" />
-          <h2 className="text-3xl md:text-4xl font-bold">
+          {/* <Star className="w-12 h-12 mx-auto mb-4 text-yellow-300 fill-yellow-300" /> */}
+          <h2 className="text-2xl md:text-3xl font-bold">
             Ready to Ace Your Interview?
           </h2>
           <p className="text-blue-100 mt-3 max-w-2xl mx-auto">

@@ -29,7 +29,7 @@ function NavBar() {
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700  flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+              {/* <Sparkles className="w-5 h-5 text-white" /> */}
             </div>
             <span className="text-xl font-bold gradient-text">AI Mock Interviewer</span>
           </div>
@@ -52,7 +52,7 @@ function NavBar() {
             </div>
             <div>
               <span className="text-xl font-bold gradient-text hidden sm:block">AI Mock Interviewer</span>
-              <span className="text-xl font-bold gradient-text block sm:hidden">AI MI</span>
+              {/* <span className="text-xl font-bold gradient-text block sm:hidden">AI MI</span> */}
             </div>
           </Link>
 

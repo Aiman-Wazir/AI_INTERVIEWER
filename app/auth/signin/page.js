@@ -63,7 +63,7 @@ export default function SignIn() {
         <div className="hidden lg:block space-y-8">
           <div className="flex items-center gap-3">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center shadow-xl shadow-blue-500/25">
-              <Sparkles className="w-8 h-8 text-white" />
+              {/* <Sparkles className="w-8 h-8 text-white" /> */}
             </div>
             <div>
               <h1 className="text-3xl font-bold text-slate-800">AI Mock Interviewer</h1>
@@ -74,8 +74,8 @@ export default function SignIn() {
           <div className="space-y-6">
             <h2 className="text-4xl font-bold leading-tight">
               Master Your
-              <span className="gradient-text block">Interview Skills</span>
-              with AI
+              {/* <span className="gradient-text block">Interview Skills</span>
+              with AI */}
             </h2>
             
             <p className="text-lg text-slate-600 leading-relaxed">
@@ -117,7 +117,7 @@ export default function SignIn() {
           <div className="text-center mb-8">
             <div className="lg:hidden flex justify-center mb-4">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center shadow-xl shadow-blue-500/25">
-                <Sparkles className="w-8 h-8 text-white" />
+                {/* <Sparkles className="w-8 h-8 text-white" /> */}
               </div>
             </div>
             <h2 className="text-2xl font-bold text-slate-800">Welcome Back 👋</h2>
