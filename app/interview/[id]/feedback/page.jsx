@@ -30,12 +30,12 @@ export default function FeedbackPage() {
     try {
       setLoading(true);
       setError('');
-      console.log('🔍 Fetching feedback for interview:', interviewId);
+      console.log(' Fetching feedback for interview:', interviewId);
       
       const response = await fetch(`/api/interview/feedback?interviewId=${interviewId}`);
       const data = await response.json();
       
-      console.log('📦 Feedback data:', data);
+      console.log(' Feedback data:', data);
       
       if (!data.success) {
         setError(data.error || 'Failed to load feedback');
@@ -44,7 +44,7 @@ export default function FeedbackPage() {
       
       setFeedback(data);
     } catch (error) {
-      console.error('❌ Error fetching feedback:', error);
+      console.error(' Error fetching feedback:', error);
       setError('Failed to load feedback. Please try again.');
     } finally {
       setLoading(false);
@@ -70,7 +70,7 @@ export default function FeedbackPage() {
     return (
       <div className="container mx-auto px-4 py-8 max-w-2xl">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-red-700 mb-2">⚠️ Error</h2>
+          <h2 className="text-xl font-semibold text-red-700 mb-2"> Error</h2>
           <p className="text-red-600">{error || 'No feedback available'}</p>
           <div className="mt-4 flex space-x-4">
             <button
@@ -96,7 +96,7 @@ export default function FeedbackPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">📊 Interview Feedback</h1>
+      <h1 className="text-3xl font-bold mb-8 text-gray-800"> Interview Feedback</h1>
 
       {/* Overall Score */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -125,7 +125,7 @@ export default function FeedbackPage() {
         {/* Overall Summary */}
         {overallFeedback.overallSummary && (
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <h4 className="font-semibold text-gray-700 mb-2">📌 Summary</h4>
+            <h4 className="font-semibold text-gray-700 mb-2"> Summary</h4>
             <p className="text-gray-600">{overallFeedback.overallSummary}</p>
           </div>
         )}
@@ -134,7 +134,7 @@ export default function FeedbackPage() {
       {/* Strengths */}
       {overallFeedback.strengths && overallFeedback.strengths.length > 0 && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-4">
-          <h3 className="text-lg font-semibold text-green-600 mb-3">✅ Strengths</h3>
+          <h3 className="text-lg font-semibold text-green-600 mb-3"> Strengths</h3>
           <ul className="list-disc list-inside space-y-1">
             {overallFeedback.strengths.map((strength, index) => (
               <li key={index} className="text-gray-700">{strength}</li>
@@ -146,7 +146,7 @@ export default function FeedbackPage() {
       {/* Weaknesses */}
       {overallFeedback.weaknesses && overallFeedback.weaknesses.length > 0 && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-4">
-          <h3 className="text-lg font-semibold text-red-600 mb-3">📝 Areas for Improvement</h3>
+          <h3 className="text-lg font-semibold text-red-600 mb-3"> Areas for Improvement</h3>
           <ul className="list-disc list-inside space-y-1">
             {overallFeedback.weaknesses.map((weakness, index) => (
               <li key={index} className="text-gray-700">{weakness}</li>
@@ -158,7 +158,7 @@ export default function FeedbackPage() {
       {/* Suggestions */}
       {overallFeedback.suggestions && overallFeedback.suggestions.length > 0 && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h3 className="text-lg font-semibold text-blue-600 mb-3">💡 Suggestions for Improvement</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-3"> Suggestions for Improvement</h3>
           <ul className="list-disc list-inside space-y-1">
             {overallFeedback.suggestions.map((suggestion, index) => (
               <li key={index} className="text-gray-700">{suggestion}</li>

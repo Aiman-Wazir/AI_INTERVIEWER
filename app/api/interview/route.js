@@ -12,8 +12,8 @@ export async function GET(request) {
     const action = searchParams.get('action');
     const interviewId = searchParams.get('interviewId');
 
-    console.log('🔍 GET Request - Action:', action);
-    console.log('🔍 GET Request - Interview ID:', interviewId);
+    console.log(' GET Request - Action:', action);
+    console.log(' GET Request - Interview ID:', interviewId);
 
     if (action === 'get-status') {
       if (!interviewId) {
@@ -25,16 +25,16 @@ export async function GET(request) {
 
       const interview = await firebaseDB.get('interviews', interviewId);
       if (!interview) {
-        console.log('❌ Interview not found in Firebase:', interviewId);
+        console.log(' Interview not found in Firebase:', interviewId);
         return Response.json({ 
           success: false,
           error: 'Interview not found. Please start a new interview.'
         }, { status: 404 });
       }
 
-      console.log('✅ Interview found:', interview.id);
-      console.log('📝 Questions:', interview.questions?.length || 0);
-      console.log('📊 Responses:', interview.responses?.length || 0);
+      console.log('Interview found:', interview.id);
+      console.log(' Questions:', interview.questions?.length || 0);
+      console.log(' Responses:', interview.responses?.length || 0);
 
       return Response.json({
         success: true,
@@ -57,7 +57,7 @@ export async function GET(request) {
     }, { status: 400 });
 
   } catch (error) {
-    console.error('❌ GET Error:', error);
+    console.error(' GET Error:', error);
     return Response.json({ 
       success: false,
       error: error.message 
@@ -69,19 +69,19 @@ export async function POST(request) {
   try {
     const { action, interviewId, jobRole, experience, skills, question, answer } = await request.json();
 
-    console.log('📝 POST - Action:', action);
-    console.log('📝 POST - Job Role:', jobRole);
+    console.log(' POST - Action:', action);
+    console.log(' POST - Job Role:', jobRole);
 
     switch (action) {
       case 'start': {
-        console.log('🚀 Starting interview for:', jobRole);
+        console.log(' Starting interview for:', jobRole);
         
         // Generate questions
         let questions = [];
         try {
           questions = await generateQuestions(jobRole, experience, skills);
         } catch (error) {
-          console.log('⚠️ Groq generation failed:', error.message);
+          console.log('Groq generation failed:', error.message);
         }
         
         // If no questions, use fallback
@@ -93,7 +93,7 @@ export async function POST(request) {
             `How do you handle tight deadlines and pressure?`,
             `Where do you see yourself in 5 years?`
           ];
-          console.log('📋 Using fallback questions');
+          console.log(' Using fallback questions');
         }
 
         const interviewData = {
@@ -111,7 +111,7 @@ export async function POST(request) {
         
         // Save to Firebase
         const newInterviewId = await firebaseDB.create('interviews', interviewData);
-        console.log('✅ Interview created with ID:', newInterviewId);
+        console.log(' Interview created with ID:', newInterviewId);
 
         return Response.json({
           success: true,
@@ -123,7 +123,7 @@ export async function POST(request) {
       }
 
       case 'submit-answer': {
-        console.log('💬 Submitting answer for interview:', interviewId);
+        console.log(' Submitting answer for interview:', interviewId);
         
         if (!interviewId || !question || !answer) {
           return Response.json({ 
@@ -135,7 +135,7 @@ export async function POST(request) {
         // Get interview from Firebase
         const interview = await firebaseDB.get('interviews', interviewId);
         if (!interview) {
-          console.log('❌ Interview not found in Firebase:', interviewId);
+          console.log(' Interview not found in Firebase:', interviewId);
           return Response.json({ 
             success: false,
             error: 'Interview not found. Please start a new interview.' 
@@ -147,7 +147,7 @@ export async function POST(request) {
         try {
           feedback = await evaluateAnswer(question, answer, jobRole || interview.jobRole);
         } catch (error) {
-          console.log('⚠️ Feedback generation failed:', error.message);
+          console.log(' Feedback generation failed:', error.message);
           feedback = { 
             score: 7, 
             strengths: "Good effort on this answer.", 
@@ -177,11 +177,11 @@ export async function POST(request) {
           interview.endTime = new Date().toISOString();
           
           try {
-            console.log('📊 Generating overall feedback for:', interview.jobRole);
+            console.log(' Generating overall feedback for:', interview.jobRole);
             overallFeedback = await generateOverallFeedback(updatedResponses, interview.jobRole);
-            console.log('✅ Overall feedback generated successfully');
+            console.log('Overall feedback generated successfully');
           } catch (error) {
-            console.log('⚠️ Overall feedback generation failed:', error.message);
+            console.log(' Overall feedback generation failed:', error.message);
             // Calculate simple overall feedback
             const scores = updatedResponses.map(r => r.feedback?.score || 0);
             const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
@@ -248,7 +248,7 @@ export async function POST(request) {
         }, { status: 400 });
     }
   } catch (error) {
-    console.error('❌ POST Error:', error);
+    console.error(' POST Error:', error);
     return Response.json({ 
       success: false,
       error: error.message 

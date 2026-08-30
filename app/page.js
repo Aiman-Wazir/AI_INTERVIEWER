@@ -59,11 +59,11 @@ export default function Home() {
         
         <div className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-50/80 backdrop-blur-sm border border-blue-200/50 rounded-full mb-6">
-            <span className="relative flex h-3 w-3">
+            {/* <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-            </span>
-            <span className="text-sm font-medium text-blue-700">AI-Powered Interview Practice</span>
+            </span> */}
+            {/* <span className="text-sm font-medium text-blue-700">AI-Powered Interview Practice</span> */}
           </div>
           
           <h1 className="text-5xl md:text-7xl font-extrabold leading-tight">
@@ -142,7 +142,7 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 md:p-12">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+        <div className="absolute inset-0 bg-[url('/next.svg')] opacity-10"></div>
         <div className="relative z-10 text-center text-white">
           <Star className="w-12 h-12 mx-auto mb-4 text-yellow-300 fill-yellow-300" />
           <h2 className="text-3xl md:text-4xl font-bold">
@@ -155,11 +155,9 @@ export default function Home() {
             href={session ? "/dashboard" : "/auth/signin"}
             className="inline-block mt-6 px-8 py-4 bg-white text-slate-800 font-semibold rounded-xl hover:bg-blue-50 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-xl"
           >
-            {session ? "Go to Dashboard 🚀" : "Start Practicing Now 🎯"}
+            {session ? "Go to Dashboard " : "Start Practicing Now "}
           </Link>
-          <p className="text-blue-200 text-sm mt-4">
-            No credit card required. Start practicing in seconds.
-          </p>
+        
         </div>
       </section>
     </div>

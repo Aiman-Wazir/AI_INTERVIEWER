@@ -116,7 +116,7 @@ export default function AudioRecorder({ onRecordingComplete }) {
       )}
 
       <div className="mt-4 text-sm text-gray-500">
-        <p>💡 Record your answer and get AI-powered feedback</p>
+        <p> Record your answer and get AI-powered feedback</p>
       </div>
     </div>
   );

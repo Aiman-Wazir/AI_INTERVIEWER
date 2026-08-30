@@ -54,7 +54,7 @@ export default function FeedbackDisplay({ feedback }) {
       {/* Strengths */}
       {feedback.strengths && (
         <div className="mb-4">
-          <h4 className="font-semibold text-green-600 mb-2">✅ Strengths</h4>
+          <h4 className="font-semibold text-green-600 mb-2"> Strengths</h4>
           <ul className="list-disc list-inside space-y-1 text-gray-700">
             {Array.isArray(feedback.strengths) ? (
               feedback.strengths.map((strength, index) => (
@@ -70,7 +70,7 @@ export default function FeedbackDisplay({ feedback }) {
       {/* Areas for Improvement */}
       {feedback.weaknesses && (
         <div className="mb-4">
-          <h4 className="font-semibold text-red-600 mb-2">📝 Areas for Improvement</h4>
+          <h4 className="font-semibold text-red-600 mb-2"> Areas for Improvement</h4>
           <ul className="list-disc list-inside space-y-1 text-gray-700">
             {Array.isArray(feedback.weaknesses) ? (
               feedback.weaknesses.map((weakness, index) => (
@@ -86,7 +86,7 @@ export default function FeedbackDisplay({ feedback }) {
       {/* Suggestions */}
       {feedback.suggestions && (
         <div className="mb-4">
-          <h4 className="font-semibold text-blue-600 mb-2">💡 Suggestions</h4>
+          <h4 className="font-semibold text-blue-600 mb-2">Suggestions</h4>
           <ul className="list-disc list-inside space-y-1 text-gray-700">
             {Array.isArray(feedback.suggestions) ? (
               feedback.suggestions.map((suggestion, index) => (
@@ -102,7 +102,7 @@ export default function FeedbackDisplay({ feedback }) {
       {/* Overall Feedback */}
       {feedback.overallFeedback && (
         <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-semibold text-gray-700 mb-2">📌 Summary</h4>
+          <h4 className="font-semibold text-gray-700 mb-2"> Summary</h4>
           <p className="text-gray-600">{feedback.overallFeedback}</p>
         </div>
       )}

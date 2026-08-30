@@ -118,10 +118,10 @@ export default function NewInterview() {
       <div className="container mx-auto px-4 max-w-6xl relative">
         {/* Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50/80 backdrop-blur-sm border border-blue-200/50 rounded-full mb-4">
+          {/* <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50/80 backdrop-blur-sm border border-blue-200/50 rounded-full mb-4">
             <Sparkles className="w-4 h-4 text-blue-500" />
             <span className="text-sm font-medium text-blue-700">AI-Powered Interview</span>
-          </div>
+          </div> */}
           <h1 className="text-4xl md:text-5xl font-bold text-slate-800">
             Start Your <span className="gradient-text">Mock Interview</span>
           </h1>
@@ -208,31 +208,7 @@ export default function NewInterview() {
               </p>
             </div>
 
-            {/* Info Box */}
-            <div className="bg-gradient-to-br from-blue-50/80 to-purple-50/80 backdrop-blur-sm border border-blue-200/50 rounded-xl p-4">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/20">
-                  <Zap className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-slate-800 text-sm">What to expect</h4>
-                  <ul className="text-sm text-slate-600 mt-1 space-y-1">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />
-                      5 questions tailored to your role and skills
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />
-                      Real-time feedback after each answer
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />
-                      Overall performance summary at the end
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+          
 
             {/* Start Button */}
             <button
