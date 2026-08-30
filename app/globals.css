@@ -1,26 +1,187 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f1f5f9;
+  min-height: 100vh;
+  color: #0f172a;
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.glass-dark {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Gradient Text - More Professional */
+.gradient-text {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply px-6 py-2.5 bg-blue-600 text-white font-medium rounded-xl 
+         hover:bg-blue-700 transform hover:scale-[1.02] active:scale-[0.98]
+         shadow-sm hover:shadow-md shadow-blue-600/20 transition-all duration-200;
+}
+
+.btn-secondary {
+  @apply px-6 py-2.5 bg-white text-slate-700 font-medium rounded-xl 
+         border border-slate-200 hover:bg-slate-50 hover:border-slate-300
+         transform hover:scale-[1.02] active:scale-[0.98]
+         shadow-sm transition-all duration-200;
+}
+
+.btn-success {
+  @apply px-6 py-2.5 bg-emerald-600 text-white font-medium rounded-xl 
+         hover:bg-emerald-700 transform hover:scale-[1.02] active:scale-[0.98]
+         shadow-sm hover:shadow-md shadow-emerald-600/20 transition-all duration-200;
+}
+
+.btn-google {
+  @apply w-full flex items-center justify-center gap-3 px-6 py-3 bg-white 
+         border border-slate-200 rounded-xl font-medium text-slate-700
+         hover:bg-slate-50 hover:shadow-sm hover:border-slate-300
+         transition-all duration-200;
+}
+
+/* Inputs */
+.input-modern {
+  @apply w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl
+         focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500
+         hover:border-slate-300 transition-all duration-200
+         placeholder:text-slate-400 text-slate-700 text-sm;
+}
+
+/* Cards */
+.card-modern {
+  @apply glass rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200;
+}
+
+/* Badges */
+.badge {
+  @apply px-2.5 py-0.5 text-xs font-medium rounded-full;
+}
+
+.badge-success {
+  @apply bg-emerald-50 text-emerald-700 border border-emerald-200/50;
+}
+
+.badge-warning {
+  @apply bg-amber-50 text-amber-700 border border-amber-200/50;
+}
+
+.badge-info {
+  @apply bg-blue-50 text-blue-700 border border-blue-200/50;
+}
+
+.badge-danger {
+  @apply bg-rose-50 text-rose-700 border border-rose-200/50;
+}
+
+/* Progress Bar */
+.progress-bar {
+  @apply w-full h-2 bg-slate-100 rounded-full overflow-hidden;
+}
+
+.progress-bar-fill {
+  @apply h-full bg-blue-600 rounded-full transition-all duration-500 ease-out;
+}
+
+/* Chat Bubbles */
+.chat-bubble-ai {
+  @apply bg-white border border-slate-200/80 rounded-2xl rounded-tl-sm p-4 max-w-[80%] shadow-sm;
+}
+
+.chat-bubble-user {
+  @apply bg-blue-600 text-white rounded-2xl rounded-tr-sm p-4 max-w-[80%] shadow-sm shadow-blue-600/20;
+}
+
+.chat-bubble-feedback {
+  @apply bg-amber-50/80 border border-amber-200/50 rounded-2xl p-4 shadow-sm;
+}
+
+/* Avatar */
+.avatar-ai {
+  @apply w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-sm shadow-sm;
+}
+
+.avatar-user {
+  @apply w-9 h-9 rounded-full bg-slate-700 flex items-center justify-center text-white font-semibold text-sm shadow-sm;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Grid Background */
+.bg-grid {
+  background-image: 
+    linear-gradient(rgba(37, 99, 235, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Consistent Text Sizes */
+.text-title {
+  @apply text-2xl md:text-3xl font-bold text-slate-800;
+}
+
+.text-subtitle {
+  @apply text-lg font-semibold text-slate-700;
+}
+
+.text-body {
+  @apply text-sm text-slate-600;
+}
+
+.text-small {
+  @apply text-xs text-slate-500;
 }
