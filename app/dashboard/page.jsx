@@ -16,11 +16,12 @@ import {
   Calendar,
   ChevronRight,
   Star,
-  BarChart3,
   Target,
   Sparkles,
   CheckCircle2,
-  ArrowUpRight
+  Heart,
+  Smile,
+  Coffee
 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -81,17 +82,17 @@ export default function Dashboard() {
 
   const getStatusBadge = (status) => {
     if (status === 'completed') {
-      return <span className="badge badge-success">Completed</span>;
+      return <span className="badge badge-success">✨ Completed</span>;
     } else if (status === 'in-progress') {
-      return <span className="badge badge-warning">In Progress</span>;
+      return <span className="badge badge-warning">🌱 In Progress</span>;
     } else {
-      return <span className="badge badge-info">Not Started</span>;
+      return <span className="badge badge-soft">📝 Not Started</span>;
     }
   };
 
   const getScoreColor = (score) => {
     if (score >= 8) return 'text-emerald-600';
-    if (score >= 6) return 'text-blue-600';
+    if (score >= 6) return 'text-[#6c5ce7]';
     if (score >= 4) return 'text-amber-600';
     return 'text-rose-600';
   };
@@ -100,8 +101,8 @@ export default function Dashboard() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
-          <div className="w-12 h-12 border-3 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="text-sm text-slate-500 mt-4">Loading...</p>
+          <div className="w-12 h-12 border-3 border-[#6c5ce7] border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-sm text-[#b2a8a0] mt-4">Loading your practice space...</p>
         </div>
       </div>
     );
@@ -113,34 +114,41 @@ export default function Dashboard() {
 
   const hasInterviews = interviews.length > 0;
 
+  // Get time-based greeting
+  const hour = new Date().getHours();
+  let greeting = 'Good morning';
+  let emoji = '🌅';
+  if (hour >= 12 && hour < 17) { greeting = 'Good afternoon'; emoji = '☀️'; }
+  else if (hour >= 17) { greeting = 'Good evening'; emoji = '🌙'; }
+
   return (
-    <div className="space-y-6 pb-12">
-      {/* Welcome Section */}
+    <div className="space-y-6 pb-12 max-w-6xl mx-auto">
+      {/* Welcome Section - Warm & Personal */}
       <div className="glass rounded-2xl p-6 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm">
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#6c5ce7] to-[#a29bfe] flex items-center justify-center shadow-md shadow-[#6c5ce7]/15">
               {session.user?.image ? (
                 <Image
                   src={session.user.image}
                   alt={session.user.name || 'User'}
-                  width={40}
-                  height={40}
-                  className="rounded-lg"
+                  width={48}
+                  height={48}
+                  className="rounded-full"
                 />
               ) : (
-                <span className="text-lg font-bold text-white">
+                <span className="text-xl font-bold text-white">
                   {session.user?.name?.[0] || 'U'}
                 </span>
               )}
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-800">
-                Welcome back, <span className="gradient-text">{session.user?.name?.split(' ')[0] || 'User'}</span>
+              <h1 className="text-xl font-bold text-[#1a1a2e]">
+                {greeting}, <span className="gradient-text">{session.user?.name?.split(' ')[0] || 'User'}</span> {emoji}
               </h1>
-              <p className="text-sm text-slate-500 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-                Ready to practice?
+              <p className="text-sm text-[#b2a8a0] flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#6c5ce7]" />
+                Ready to grow your interview skills today?
               </p>
             </div>
           </div>
@@ -149,47 +157,47 @@ export default function Dashboard() {
             className="btn-primary flex items-center gap-2 text-sm px-5 py-2.5"
           >
             <PlusCircle className="w-4 h-4" />
-            New Interview
+            Start Practice
           </Link>
         </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Grid - Warm Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="glass rounded-2xl p-5 shadow-sm">
+        <div className="glass rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Total</p>
-              <p className="text-2xl font-bold text-slate-800 mt-1">{stats.total}</p>
+              <p className="text-xs font-medium text-[#b2a8a0] uppercase tracking-wider">Total</p>
+              <p className="text-2xl font-bold text-[#1a1a2e] mt-1">{stats.total}</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-blue-600" />
+            <div className="w-10 h-10 rounded-xl bg-[#6c5ce7]/10 flex items-center justify-center">
+              <Briefcase className="w-5 h-5 text-[#6c5ce7]" />
             </div>
           </div>
-          <p className="text-xs text-slate-500 mt-2">
-            {stats.total > 0 ? 'All interviews' : 'Start your first'}
+          <p className="text-xs text-[#b2a8a0] mt-2">
+            {stats.total > 0 ? `${stats.total} interviews taken` : 'Start your journey'}
           </p>
         </div>
 
-        <div className="glass rounded-2xl p-5 shadow-sm">
+        <div className="glass rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Completed</p>
-              <p className="text-2xl font-bold text-slate-800 mt-1">{stats.completed}</p>
+              <p className="text-xs font-medium text-[#b2a8a0] uppercase tracking-wider">Done</p>
+              <p className="text-2xl font-bold text-[#1a1a2e] mt-1">{stats.completed}</p>
             </div>
             <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
               <CheckCircle2 className="w-5 h-5 text-emerald-600" />
             </div>
           </div>
-          <p className="text-xs text-slate-500 mt-2">
-            {stats.total > 0 ? `${Math.round((stats.completed / stats.total) * 100)}% done` : '0% done'}
+          <p className="text-xs text-[#b2a8a0] mt-2">
+            {stats.total > 0 ? `${Math.round((stats.completed / stats.total) * 100)}% completion` : 'Start your first'}
           </p>
         </div>
 
-        <div className="glass rounded-2xl p-5 shadow-sm">
+        <div className="glass rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Avg Score</p>
+              <p className="text-xs font-medium text-[#b2a8a0] uppercase tracking-wider">Avg Score</p>
               <p className={`text-2xl font-bold mt-1 ${getScoreColor(stats.averageScore)}`}>
                 {stats.averageScore > 0 ? stats.averageScore : '—'}
               </p>
@@ -198,23 +206,23 @@ export default function Dashboard() {
               <Award className="w-5 h-5 text-amber-600" />
             </div>
           </div>
-          <p className="text-xs text-slate-500 mt-2">
-            {stats.averageScore > 0 ? `${stats.averageScore}/10` : 'No scores'}
+          <p className="text-xs text-[#b2a8a0] mt-2">
+            {stats.averageScore > 0 ? `Out of 10` : 'No scores yet'}
           </p>
         </div>
 
-        <div className="glass rounded-2xl p-5 shadow-sm">
+        <div className="glass rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">In Progress</p>
-              <p className="text-2xl font-bold text-slate-800 mt-1">{stats.inProgress}</p>
+              <p className="text-xs font-medium text-[#b2a8a0] uppercase tracking-wider">In Progress</p>
+              <p className="text-2xl font-bold text-[#1a1a2e] mt-1">{stats.inProgress}</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-              <Clock className="w-5 h-5 text-blue-600" />
+            <div className="w-10 h-10 rounded-xl bg-[#f8e8d8]/60 flex items-center justify-center">
+              <Coffee className="w-5 h-5 text-[#b2a8a0]" />
             </div>
           </div>
-          <p className="text-xs text-slate-500 mt-2">
-            {stats.inProgress > 0 ? 'Finish your interview' : 'No active'}
+          <p className="text-xs text-[#b2a8a0] mt-2">
+            {stats.inProgress > 0 ? 'Keep going! 🚀' : 'All clear ✨'}
           </p>
         </div>
       </div>
@@ -223,15 +231,15 @@ export default function Dashboard() {
       <div className="glass rounded-2xl p-6 shadow-sm">
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-              <Clock className="w-4 h-4 text-blue-600" />
+            <div className="w-8 h-8 rounded-lg bg-[#6c5ce7]/10 flex items-center justify-center">
+              <Clock className="w-4 h-4 text-[#6c5ce7]" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-slate-800">Recent Interviews</h2>
+              <h2 className="text-base font-semibold text-[#1a1a2e]">Recent Practice</h2>
             </div>
           </div>
           {hasInterviews && (
-            <button className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
+            <button className="text-xs text-[#6c5ce7] hover:text-[#4a3db8] font-medium flex items-center gap-1">
               View All
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
@@ -240,19 +248,19 @@ export default function Dashboard() {
 
         {!hasInterviews ? (
           <div className="text-center py-10">
-            <div className="w-16 h-16 rounded-xl bg-blue-50 flex items-center justify-center mx-auto mb-3">
-              <Target className="w-8 h-8 text-blue-500" />
+            <div className="w-16 h-16 rounded-xl bg-[#6c5ce7]/10 flex items-center justify-center mx-auto mb-4">
+              <Smile className="w-8 h-8 text-[#6c5ce7]" />
             </div>
-            <h3 className="text-base font-semibold text-slate-700 mb-1">No Interviews Yet</h3>
-            <p className="text-sm text-slate-500 max-w-sm mx-auto">
-              Start your first mock interview and get AI-powered feedback.
+            <h3 className="text-base font-semibold text-[#1a1a2e] mb-1">Your practice space is ready</h3>
+            <p className="text-sm text-[#b2a8a0] max-w-sm mx-auto">
+              Start your first mock interview and get gentle, human-like feedback to help you grow.
             </p>
             <Link
               href="/interview/new"
-              className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-all shadow-sm"
+              className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 bg-gradient-to-r from-[#6c5ce7] to-[#a29bfe] text-white text-sm font-medium rounded-xl hover:from-[#5a4bd1] hover:to-[#8c84e0] transition-all shadow-sm"
             >
-              <PlusCircle className="w-4 h-4" />
-              Start First Interview
+              <Heart className="w-4 h-4" />
+              Start Your First Interview
             </Link>
           </div>
         ) : (
@@ -263,29 +271,29 @@ export default function Dashboard() {
                 href={`/interview/${interview.id}`}
                 className="block group"
               >
-                <div className="bg-white/50 border border-white/50 rounded-xl p-4 hover:shadow-sm hover:border-slate-200/80 transition-all duration-200">
+                <div className="bg-white/50 border border-[#f0e8e0] rounded-xl p-4 hover:shadow-sm hover:border-[#d4c8bd] transition-all duration-200">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div className="flex items-start sm:items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
-                        <Briefcase className="w-4 h-4 text-blue-600" />
+                      <div className="w-9 h-9 rounded-lg bg-[#6c5ce7]/10 flex items-center justify-center flex-shrink-0">
+                        <Briefcase className="w-4 h-4 text-[#6c5ce7]" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium text-slate-800 group-hover:text-blue-600 transition-colors">
+                        <h3 className="text-sm font-medium text-[#1a1a2e] group-hover:text-[#6c5ce7] transition-colors">
                           {interview.jobRole || 'Untitled'}
                         </h3>
                         <div className="flex flex-wrap items-center gap-2 mt-0.5">
-                          <span className="text-xs text-slate-500 flex items-center gap-1">
+                          <span className="text-xs text-[#b2a8a0] flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
                             {interview.startTime ? new Date(interview.startTime).toLocaleDateString('en-US', { 
                               month: 'short', 
                               day: 'numeric'
                             }) : 'N/A'}
                           </span>
-                          <span className="text-xs text-slate-300">•</span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-[#d4c8bd]">•</span>
+                          <span className="text-xs text-[#b2a8a0]">
                             {interview.responses?.length || 0}/{interview.questions?.length || 0}
                           </span>
-                          <span className="text-xs text-slate-300">•</span>
+                          <span className="text-xs text-[#d4c8bd]">•</span>
                           {getStatusBadge(interview.status)}
                         </div>
                       </div>
@@ -296,7 +304,7 @@ export default function Dashboard() {
                           {interview.overallFeedback.averageScore}
                         </div>
                       )}
-                      <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all" />
+                      <ChevronRight className="w-4 h-4 text-[#d4c8bd] group-hover:text-[#6c5ce7] group-hover:translate-x-0.5 transition-all" />
                     </div>
                   </div>
                 </div>
@@ -306,43 +314,43 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions - Warm & Friendly */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Link
           href="/interview/new"
-          className="glass rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group"
+          className="glass rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 group"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-              <PlusCircle className="w-5 h-5 text-blue-600" />
+            <div className="w-10 h-10 rounded-xl bg-[#6c5ce7]/10 flex items-center justify-center group-hover:bg-[#6c5ce7]/20 transition-colors">
+              <PlusCircle className="w-5 h-5 text-[#6c5ce7]" />
             </div>
             <div>
-              <h4 className="text-sm font-semibold text-slate-800">New Interview</h4>
-              <p className="text-xs text-slate-500">Practice with AI</p>
+              <h4 className="text-sm font-semibold text-[#1a1a2e]">Practice</h4>
+              <p className="text-xs text-[#b2a8a0]">Start a new interview</p>
             </div>
           </div>
         </Link>
 
-        <div className="glass rounded-2xl p-5 shadow-sm hover:shadow-md transition-all cursor-pointer group">
+        <div className="glass rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
-              <BarChart3 className="w-5 h-5 text-emerald-600" />
+              <TrendingUp className="w-5 h-5 text-emerald-600" />
             </div>
             <div>
-              <h4 className="text-sm font-semibold text-slate-800">Analytics</h4>
-              <p className="text-xs text-slate-500">Track progress</p>
+              <h4 className="text-sm font-semibold text-[#1a1a2e]">Growth</h4>
+              <p className="text-xs text-[#b2a8a0]">Track your progress</p>
             </div>
           </div>
         </div>
 
-        <div className="glass rounded-2xl p-5 shadow-sm hover:shadow-md transition-all cursor-pointer group">
+        <div className="glass rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center group-hover:bg-amber-100 transition-colors">
-              <Star className="w-5 h-5 text-amber-600" />
+              <Heart className="w-5 h-5 text-amber-600" />
             </div>
             <div>
-              <h4 className="text-sm font-semibold text-slate-800">Tips</h4>
-              <p className="text-xs text-slate-500">Interview advice</p>
+              <h4 className="text-sm font-semibold text-[#1a1a2e]">Tips</h4>
+              <p className="text-xs text-[#b2a8a0]">Gentle advice</p>
             </div>
           </div>
         </div>
