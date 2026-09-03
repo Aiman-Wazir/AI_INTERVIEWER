@@ -68,7 +68,7 @@ export default function SignIn() {
               <Sparkles className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-[#1a1a2e]">AI Mock Interviewer</h1>
+              <h1 className="text-2xl font-bold text-[#1a1a2e]">SkillPilot AI</h1>
               <p className="text-sm text-[#b2a8a0]">Practice with heart</p>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default function SignIn() {
                 <Sparkles className="w-7 h-7 text-white" />
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-[#1a1a2e]">Welcome back ✨</h2>
+            <h2 className="text-2xl font-bold text-[#1a1a2e]">Welcome to SkillPilot AI</h2>
             <p className="text-sm text-[#b2a8a0] mt-1">Let's continue your growth journey</p>
           </div>
 

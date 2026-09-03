@@ -31,7 +31,7 @@ function NavBar() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700  flex items-center justify-center">
               {/* <Sparkles className="w-5 h-5 text-white" /> */}
             </div>
-            <span className="text-xl font-bold gradient-text">AI Mock Interviewer</span>
+            <span className="text-xl font-bold gradient-text">SkillPilot AI</span>
           </div>
           <div className="w-8 h-8 bg-slate-200 rounded-full animate-pulse"></div>
         </div>
@@ -51,7 +51,7 @@ function NavBar() {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="text-xl font-bold gradient-text hidden sm:block">AI Mock Interviewer</span>
+              <span className="text-xl font-bold gradient-text hidden sm:block">SkillPilot AI</span>
               {/* <span className="text-xl font-bold gradient-text block sm:hidden">AI MI</span> */}
             </div>
           </Link>

@@ -113,7 +113,7 @@ export default function Home() {
       <section id="features" className="scroll-mt-20">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-800">
-            Why Choose <span className="gradient-text">AI Mock Interviewer</span>
+            Why Choose <span className="gradient-text">SkillPilot AI</span>
           </h2>
           <p className="text-slate-600 mt-4 max-w-2xl mx-auto">
             Everything you need to ace your next interview
