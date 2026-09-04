@@ -147,7 +147,7 @@ export default function Dashboard() {
                 {greeting}, <span className="gradient-text">{session.user?.name?.split(' ')[0] || 'User'}</span> {emoji}
               </h1>
               <p className="text-sm text-[#b2a8a0] flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-[#6c5ce7]" />
+               
                 Ready to grow your interview skills today?
               </p>
             </div>
