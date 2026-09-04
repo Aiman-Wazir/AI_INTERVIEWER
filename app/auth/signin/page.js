@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Mail, 
   Lock, 
@@ -63,9 +64,21 @@ export default function SignIn() {
         {/* Left Side - Branding */}
         <div className="hidden lg:block space-y-6">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#6c5ce7] to-[#fd79a8] flex items-center justify-center shadow-lg shadow-[#6c5ce7]/20">
+            <div className="flex justify-center mb-4">
+  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6c5ce7] to-[#fd79a8] flex items-center justify-center shadow-lg shadow-[#6c5ce7]/20">
+    <Image
+      src="/logo.svg"
+      alt="SkillPilot AI"
+      width={40}
+      height={40}
+      className="w-10 h-10"
+    />
+  </div>
+</div>
+
+            {/* <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#6c5ce7] to-[#fd79a8] flex items-center justify-center shadow-lg shadow-[#6c5ce7]/20">
               <Sparkles className="w-6 h-6 text-white" />
-            </div>
+            </div> */}
             <div>
               <h1 className="text-2xl font-bold text-gray-800">SkillPilot AI</h1>
               <p className="text-sm text-gray-400">Your personal interview coach</p>
