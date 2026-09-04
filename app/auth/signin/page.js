@@ -58,7 +58,7 @@ export default function SignIn() {
               
             </div>
             <h2 className="text-2xl font-bold text-gray-800">Welcome to SkillPilot AI</h2>
-            <p className="text-sm text-gray-400 mt-1">Sign in to continue practicing</p>
+            {/* <p className="text-sm text-gray-400 mt-1">Sign in to continue practicing</p> */}
           </div>
 
           {error && (
@@ -151,8 +151,9 @@ export default function SignIn() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3.5 rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 flex items-center justify-center gap-2 text-base font-medium shadow-md shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+             className="w-full bg-gradient-to-r from-[#6c5ce7] to-[#fd79a8] text-white py-3.5 rounded-xl hover:from-[#5a4bd1] hover:to-[#e86a98] transition-all duration-200 flex items-center justify-center gap-2 text-base font-medium shadow-md shadow-[#6c5ce7]/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
+              
               {isLoading ? (
                 'Loading...'
               ) : (
