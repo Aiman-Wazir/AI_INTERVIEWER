@@ -82,11 +82,11 @@ export default function Dashboard() {
 
   const getStatusBadge = (status) => {
     if (status === 'completed') {
-      return <span className="badge badge-success">✨ Completed</span>;
+      return <span className="badge badge-success"> Completed</span>;
     } else if (status === 'in-progress') {
-      return <span className="badge badge-warning">🌱 In Progress</span>;
+      return <span className="badge badge-warning"> In Progress</span>;
     } else {
-      return <span className="badge badge-soft">📝 Not Started</span>;
+      return <span className="badge badge-soft"> Not Started</span>;
     }
   };
 
@@ -117,9 +117,9 @@ export default function Dashboard() {
   // Get time-based greeting
   const hour = new Date().getHours();
   let greeting = 'Good morning';
-  let emoji = '🌅';
-  if (hour >= 12 && hour < 17) { greeting = 'Good afternoon'; emoji = '☀️'; }
-  else if (hour >= 17) { greeting = 'Good evening'; emoji = '🌙'; }
+  let emoji = '';
+  if (hour >= 12 && hour < 17) { greeting = 'Good afternoon'; emoji = ''; }
+  else if (hour >= 17) { greeting = 'Good evening'; emoji = ''; }
 
   return (
     <div className="space-y-6 pb-12 max-w-6xl mx-auto">
@@ -222,7 +222,7 @@ export default function Dashboard() {
             </div>
           </div>
           <p className="text-xs text-[#b2a8a0] mt-2">
-            {stats.inProgress > 0 ? 'Keep going! 🚀' : 'All clear ✨'}
+            {stats.inProgress > 0 ? 'Keep going! ' : 'All clear '}
           </p>
         </div>
       </div>
