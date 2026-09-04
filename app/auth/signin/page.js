@@ -96,7 +96,7 @@ export default function SignIn() {
             </div>
 
             {/* Stats */}
-            <div className="flex gap-8 pt-4">
+            {/* <div className="flex gap-8 pt-4">
               <div>
                 <div className="text-2xl font-bold text-[#1a1a2e]">10K+</div>
                 <div className="text-xs text-[#b2a8a0]">Users</div>
@@ -109,7 +109,7 @@ export default function SignIn() {
                 <div className="text-2xl font-bold text-[#1a1a2e]">95%</div>
                 <div className="text-xs text-[#b2a8a0]">Satisfaction</div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
