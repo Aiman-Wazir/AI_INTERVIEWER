@@ -4,7 +4,7 @@ import {
   generateFollowUpQuestion, 
   generateOverallFeedback 
 } from '@/lib/groq';
-import { firebaseDB } from '@/lib/firebase';
+import storage from '@/lib/storage';
 
 export async function GET(request) {
   try {
@@ -12,9 +12,10 @@ export async function GET(request) {
     const action = searchParams.get('action');
     const interviewId = searchParams.get('interviewId');
 
-    console.log(' GET Request - Action:', action);
-    console.log(' GET Request - Interview ID:', interviewId);
+    console.log('GET Request - Action:', action);
+    console.log('GET Request - Interview ID:', interviewId);
 
+    // Get single interview status
     if (action === 'get-status') {
       if (!interviewId) {
         return Response.json({ 
@@ -23,9 +24,9 @@ export async function GET(request) {
         }, { status: 400 });
       }
 
-      const interview = await firebaseDB.get('interviews', interviewId);
+      const interview = storage.get(interviewId);
       if (!interview) {
-        console.log(' Interview not found in Firebase:', interviewId);
+        console.log('Interview not found:', interviewId);
         return Response.json({ 
           success: false,
           error: 'Interview not found. Please start a new interview.'
@@ -33,8 +34,8 @@ export async function GET(request) {
       }
 
       console.log('Interview found:', interview.id);
-      console.log(' Questions:', interview.questions?.length || 0);
-      console.log(' Responses:', interview.responses?.length || 0);
+      console.log('Questions:', interview.questions?.length || 0);
+      console.log('Responses:', interview.responses?.length || 0);
 
       return Response.json({
         success: true,
@@ -42,12 +43,48 @@ export async function GET(request) {
       });
     }
 
+    // List all interviews
     if (action === 'list') {
-      const interviews = await firebaseDB.query('interviews');
+      const interviews = storage.getAll();
+      console.log('Listing interviews:', interviews.length);
       return Response.json({
         success: true,
         count: interviews.length,
         interviews: interviews
+      });
+    }
+
+    // Delete an interview
+    if (action === 'delete') {
+      if (!interviewId) {
+        return Response.json({ 
+          success: false,
+          error: 'Interview ID required' 
+        }, { status: 400 });
+      }
+
+      const deleted = storage.delete(interviewId);
+      if (!deleted) {
+        console.log('Interview not found for deletion:', interviewId);
+        return Response.json({ 
+          success: false,
+          error: 'Interview not found' 
+        }, { status: 404 });
+      }
+
+      console.log('Interview deleted:', interviewId);
+      return Response.json({
+        success: true,
+        message: 'Interview deleted successfully'
+      });
+    }
+
+    // Clear all interviews (for testing)
+    if (action === 'clear') {
+      storage.clear();
+      return Response.json({
+        success: true,
+        message: 'All interviews cleared'
       });
     }
 
@@ -57,7 +94,7 @@ export async function GET(request) {
     }, { status: 400 });
 
   } catch (error) {
-    console.error(' GET Error:', error);
+    console.error('GET Error:', error);
     return Response.json({ 
       success: false,
       error: error.message 
@@ -69,12 +106,12 @@ export async function POST(request) {
   try {
     const { action, interviewId, jobRole, experience, skills, question, answer } = await request.json();
 
-    console.log(' POST - Action:', action);
-    console.log(' POST - Job Role:', jobRole);
+    console.log('POST - Action:', action);
+    console.log('POST - Job Role:', jobRole);
 
     switch (action) {
       case 'start': {
-        console.log(' Starting interview for:', jobRole);
+        console.log('Starting interview for:', jobRole);
         
         // Generate questions
         let questions = [];
@@ -93,10 +130,13 @@ export async function POST(request) {
             `How do you handle tight deadlines and pressure?`,
             `Where do you see yourself in 5 years?`
           ];
-          console.log(' Using fallback questions');
+          console.log('Using fallback questions');
         }
 
+        const newInterviewId = `interview_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+        
         const interviewData = {
+          id: newInterviewId,
           jobRole,
           experience: parseInt(experience) || 0,
           skills: typeof skills === 'string' ? skills.split(',').map(s => s.trim()) : skills || [],
@@ -105,13 +145,11 @@ export async function POST(request) {
           responses: [],
           startTime: new Date().toISOString(),
           status: 'in-progress',
-          overallFeedback: null,
-          createdAt: new Date().toISOString()
+          overallFeedback: null
         };
         
-        // Save to Firebase
-        const newInterviewId = await firebaseDB.create('interviews', interviewData);
-        console.log(' Interview created with ID:', newInterviewId);
+        storage.set(newInterviewId, interviewData);
+        console.log('Interview created with ID:', newInterviewId);
 
         return Response.json({
           success: true,
@@ -123,7 +161,7 @@ export async function POST(request) {
       }
 
       case 'submit-answer': {
-        console.log(' Submitting answer for interview:', interviewId);
+        console.log('Submitting answer for interview:', interviewId);
         
         if (!interviewId || !question || !answer) {
           return Response.json({ 
@@ -132,10 +170,9 @@ export async function POST(request) {
           }, { status: 400 });
         }
 
-        // Get interview from Firebase
-        const interview = await firebaseDB.get('interviews', interviewId);
+        const interview = storage.get(interviewId);
         if (!interview) {
-          console.log(' Interview not found in Firebase:', interviewId);
+          console.log('Interview not found:', interviewId);
           return Response.json({ 
             success: false,
             error: 'Interview not found. Please start a new interview.' 
@@ -147,7 +184,7 @@ export async function POST(request) {
         try {
           feedback = await evaluateAnswer(question, answer, jobRole || interview.jobRole);
         } catch (error) {
-          console.log(' Feedback generation failed:', error.message);
+          console.log('Feedback generation failed:', error.message);
           feedback = { 
             score: 7, 
             strengths: "Good effort on this answer.", 
@@ -157,75 +194,48 @@ export async function POST(request) {
           };
         }
         
-        // Add response to interview
-        const updatedResponses = [...(interview.responses || []), {
+        interview.responses.push({
           question,
           answer,
           feedback: feedback,
           timestamp: new Date().toISOString()
-        }];
+        });
 
-        const currentQuestionIndex = (interview.currentQuestion || 0) + 1;
-        const isComplete = currentQuestionIndex >= (interview.questions || []).length;
+        const currentQuestionIndex = interview.currentQuestion + 1;
+        const isComplete = currentQuestionIndex >= interview.questions.length;
 
         let nextQuestion = null;
         let overallFeedback = null;
 
         if (isComplete) {
-          // Generate overall feedback when interview is complete
           interview.status = 'completed';
           interview.endTime = new Date().toISOString();
           
           try {
-            console.log(' Generating overall feedback for:', interview.jobRole);
-            overallFeedback = await generateOverallFeedback(updatedResponses, interview.jobRole);
-            console.log('Overall feedback generated successfully');
+            console.log('Generating overall feedback for:', interview.jobRole);
+            overallFeedback = await generateOverallFeedback(interview.responses, interview.jobRole);
+            interview.overallFeedback = overallFeedback;
+            console.log('Overall feedback generated');
           } catch (error) {
-            console.log(' Overall feedback generation failed:', error.message);
-            // Calculate simple overall feedback
-            const scores = updatedResponses.map(r => r.feedback?.score || 0);
+            console.log('Overall feedback generation failed:', error.message);
+            const scores = interview.responses.map(r => r.feedback?.score || 0);
             const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
-            const allStrengths = updatedResponses.map(r => r.feedback?.strengths).filter(Boolean);
-            const allWeaknesses = updatedResponses.map(r => r.feedback?.weaknesses).filter(Boolean);
-            const allSuggestions = updatedResponses.map(r => r.feedback?.suggestions).filter(Boolean);
-            
-            let summary = '';
-            if (avgScore >= 8) {
-              summary = 'Excellent performance! You demonstrated strong interview skills. Keep up the great work!';
-            } else if (avgScore >= 6) {
-              summary = 'Good performance with room for improvement. Focus on providing more specific examples.';
-            } else if (avgScore >= 4) {
-              summary = 'Fair performance. Work on improving your answers with more details.';
-            } else {
-              summary = 'Needs improvement. Practice more and focus on fundamentals.';
-            }
             
             overallFeedback = {
               averageScore: Math.round(avgScore * 10) / 10,
-              strengths: allStrengths.length > 0 ? allStrengths.slice(0, 5) : ["You attempted all questions"],
-              weaknesses: allWeaknesses.length > 0 ? allWeaknesses.slice(0, 5) : ["Could provide more specific examples"],
-              suggestions: allSuggestions.length > 0 ? allSuggestions.slice(0, 5) : ["Practice using the STAR method"],
-              overallSummary: summary
+              strengths: ["You completed the interview"],
+              weaknesses: ["Could provide more specific examples"],
+              suggestions: ["Practice using the STAR method"],
+              overallSummary: avgScore >= 7 ? "Good job!" : "Keep practicing!"
             };
+            interview.overallFeedback = overallFeedback;
           }
         } else {
           nextQuestion = interview.questions[currentQuestionIndex];
         }
 
-        // Prepare update data
-        const updateData = {
-          responses: updatedResponses,
-          currentQuestion: currentQuestionIndex,
-          status: isComplete ? 'completed' : 'in-progress'
-        };
-
-        if (isComplete && overallFeedback) {
-          updateData.overallFeedback = overallFeedback;
-          updateData.endTime = new Date().toISOString();
-        }
-
-        // Update in Firebase
-        await firebaseDB.update('interviews', interviewId, updateData);
+        interview.currentQuestion = currentQuestionIndex;
+        storage.set(interviewId, interview);
 
         const progress = (currentQuestionIndex / interview.questions.length) * 100;
 
@@ -248,7 +258,7 @@ export async function POST(request) {
         }, { status: 400 });
     }
   } catch (error) {
-    console.error(' POST Error:', error);
+    console.error('POST Error:', error);
     return Response.json({ 
       success: false,
       error: error.message 
