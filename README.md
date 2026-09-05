@@ -77,7 +77,7 @@ Role + Experience + Skills
 
 <img src="screenshots/interview2.png" alt="SkillPilot AI Interview Session" width="100%"/>
 
-### AI Feedback
+### AI Profile
 
 <img src="screenshots/profile.png" alt="SkillPilot AI Profile" width="100%"/>
 
