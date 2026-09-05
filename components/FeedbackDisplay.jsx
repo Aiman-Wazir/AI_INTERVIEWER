@@ -8,7 +8,7 @@ export default function FeedbackDisplay({ feedback }) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h3 className="text-xl font-semibold mb-4 text-gray-800">
-        📊 Interview Feedback
+        Interview Feedback
       </h3>
       
       {/* Overall Score */}

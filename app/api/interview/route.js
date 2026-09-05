@@ -170,6 +170,9 @@ export async function POST(request) {
           }, { status: 400 });
         }
 
+        // Force reload from file to get latest data
+        storage.loadFromFile();
+        
         const interview = storage.get(interviewId);
         if (!interview) {
           console.log('Interview not found:', interviewId);
@@ -215,7 +218,7 @@ export async function POST(request) {
             console.log('Generating overall feedback for:', interview.jobRole);
             overallFeedback = await generateOverallFeedback(interview.responses, interview.jobRole);
             interview.overallFeedback = overallFeedback;
-            console.log('Overall feedback generated');
+            console.log('Overall feedback generated successfully');
           } catch (error) {
             console.log('Overall feedback generation failed:', error.message);
             const scores = interview.responses.map(r => r.feedback?.score || 0);
@@ -226,7 +229,7 @@ export async function POST(request) {
               strengths: ["You completed the interview"],
               weaknesses: ["Could provide more specific examples"],
               suggestions: ["Practice using the STAR method"],
-              overallSummary: avgScore >= 7 ? "Good job!" : "Keep practicing!"
+              overallSummary: avgScore >= 7 ? "Good job" : "Keep practicing"
             };
             interview.overallFeedback = overallFeedback;
           }
@@ -235,7 +238,15 @@ export async function POST(request) {
         }
 
         interview.currentQuestion = currentQuestionIndex;
+        
+        // Save the interview
         storage.set(interviewId, interview);
+        
+        // Verify save
+        const verifyInterview = storage.get(interviewId);
+        console.log('Interview saved and verified:', !!verifyInterview);
+        console.log('Status:', verifyInterview?.status);
+        console.log('Has overall feedback:', !!verifyInterview?.overallFeedback);
 
         const progress = (currentQuestionIndex / interview.questions.length) * 100;
 

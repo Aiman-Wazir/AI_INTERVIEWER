@@ -76,6 +76,10 @@ export default function InterviewChat({ interviewId, jobRole, onComplete }) {
         
         if (responses.length >= data.questions.length) {
           setIsComplete(true);
+          // ✅ Auto redirect after 2 seconds
+          setTimeout(() => {
+            onComplete();
+          }, 2000);
         }
       }
     } catch (error) {
@@ -125,6 +129,8 @@ export default function InterviewChat({ interviewId, jobRole, onComplete }) {
 
       if (data.isComplete) {
         setIsComplete(true);
+        console.log('🎉 Interview complete! Redirecting to feedback...');
+        // ✅ Wait 2 seconds then redirect to feedback
         setTimeout(() => {
           onComplete();
         }, 2000);
@@ -141,6 +147,7 @@ export default function InterviewChat({ interviewId, jobRole, onComplete }) {
       }
     } catch (error) {
       console.error('Error submitting answer:', error);
+      alert('Failed to submit answer. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -151,9 +158,7 @@ export default function InterviewChat({ interviewId, jobRole, onComplete }) {
       case 'bot':
         return (
           <div className="flex items-start space-x-3 mb-4">
-            <div className="avatar-ai flex-shrink-0">
-              AI
-            </div>
+            <div className="avatar-ai flex-shrink-0">AI</div>
             <div className="chat-bubble-ai">
               <p className="text-slate-700 leading-relaxed">{message.content}</p>
               <span className="text-xs text-slate-400 mt-2 block">
@@ -172,9 +177,7 @@ export default function InterviewChat({ interviewId, jobRole, onComplete }) {
                 {new Date(message.timestamp).toLocaleTimeString()}
               </span>
             </div>
-            <div className="avatar-user flex-shrink-0">
-              You
-            </div>
+            <div className="avatar-user flex-shrink-0">You</div>
           </div>
         );
 
@@ -183,21 +186,18 @@ export default function InterviewChat({ interviewId, jobRole, onComplete }) {
         return (
           <div className="flex justify-center mb-4">
             <div className="chat-bubble-feedback max-w-[90%] w-full">
-              <div className="flex items-center space-x-2 mb-3">
-                <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  feedback.score >= 8 ? 'bg-emerald-100 text-emerald-700' :
-                  feedback.score >= 6 ? 'bg-blue-100 text-blue-700' :
-                  feedback.score >= 4 ? 'bg-amber-100 text-amber-700' :
-                  'bg-rose-100 text-rose-700'
-                }`}>
-                  Score: {feedback.score}/10
-                </div>
-                {feedback.score >= 8 && <CheckCircle2 className="w-5 h-5 text-emerald-500" />}
+              <div className={`px-3 py-1 rounded-full text-sm font-medium inline-block ${
+                feedback.score >= 8 ? 'bg-emerald-100 text-emerald-700' :
+                feedback.score >= 6 ? 'bg-blue-100 text-blue-700' :
+                feedback.score >= 4 ? 'bg-amber-100 text-amber-700' :
+                'bg-rose-100 text-rose-700'
+              }`}>
+                Score: {feedback.score}/10
               </div>
               
               {feedback.strengths && feedback.strengths.length > 0 && (
-                <div className="mb-2">
-                  <p className="text-sm font-medium text-emerald-600">✓ Strengths</p>
+                <div className="mt-2">
+                  <p className="text-sm font-medium text-emerald-600">Strengths</p>
                   <ul className="text-sm text-slate-600 list-disc list-inside">
                     {feedback.strengths.map((s, i) => (
                       <li key={i}>{s}</li>
@@ -207,8 +207,8 @@ export default function InterviewChat({ interviewId, jobRole, onComplete }) {
               )}
               
               {feedback.weaknesses && feedback.weaknesses.length > 0 && (
-                <div className="mb-2">
-                  <p className="text-sm font-medium text-rose-600">✗ Areas for Improvement</p>
+                <div className="mt-2">
+                  <p className="text-sm font-medium text-rose-600">Areas for Improvement</p>
                   <ul className="text-sm text-slate-600 list-disc list-inside">
                     {feedback.weaknesses.map((w, i) => (
                       <li key={i}>{w}</li>
@@ -218,8 +218,8 @@ export default function InterviewChat({ interviewId, jobRole, onComplete }) {
               )}
               
               {feedback.suggestions && feedback.suggestions.length > 0 && (
-                <div className="mb-2">
-                  <p className="text-sm font-medium text-blue-600">💡 Suggestions</p>
+                <div className="mt-2">
+                  <p className="text-sm font-medium text-blue-600">Suggestions</p>
                   <ul className="text-sm text-slate-600 list-disc list-inside">
                     {feedback.suggestions.map((s, i) => (
                       <li key={i}>{s}</li>
@@ -250,6 +250,7 @@ export default function InterviewChat({ interviewId, jobRole, onComplete }) {
         </div>
         <h2 className="text-2xl font-bold text-slate-800 mb-2">Interview Complete! 🎉</h2>
         <p className="text-slate-500">Your feedback is being prepared...</p>
+        <p className="text-sm text-slate-400 mt-2">Redirecting to feedback page...</p>
       </div>
     );
   }

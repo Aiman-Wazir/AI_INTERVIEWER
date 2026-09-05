@@ -8,6 +8,9 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { Menu, X, LogOut, LayoutDashboard, PlusCircle, User, ChevronDown } from 'lucide-react';
 
+
+
+
 function NavBar() {
   const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState(false);

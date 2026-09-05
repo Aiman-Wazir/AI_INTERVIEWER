@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { Home, RefreshCw, CheckCircle, XCircle, Lightbulb } from 'lucide-react';
 
 export default function FeedbackPage() {
   const params = useParams();
@@ -12,6 +13,7 @@ export default function FeedbackPage() {
   const [feedback, setFeedback] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [retryCount, setRetryCount] = useState(0);
 
   const interviewId = params.id;
 
@@ -24,27 +26,33 @@ export default function FeedbackPage() {
     if (session && interviewId) {
       fetchFeedback();
     }
-  }, [session, status, interviewId, router]);
+  }, [session, status, interviewId, router, retryCount]);
 
   const fetchFeedback = async () => {
     try {
       setLoading(true);
       setError('');
-      console.log(' Fetching feedback for interview:', interviewId);
+      
+      console.log('Fetching feedback for interview:', interviewId);
       
       const response = await fetch(`/api/interview/feedback?interviewId=${interviewId}`);
       const data = await response.json();
       
-      console.log(' Feedback data:', data);
+      console.log('Feedback response:', data);
       
       if (!data.success) {
         setError(data.error || 'Failed to load feedback');
         return;
       }
       
+      if (!data.overallFeedback) {
+        setError('No feedback available for this interview');
+        return;
+      }
+      
       setFeedback(data);
     } catch (error) {
-      console.error(' Error fetching feedback:', error);
+      console.error('Error fetching feedback:', error);
       setError('Failed to load feedback. Please try again.');
     } finally {
       setLoading(false);
@@ -52,14 +60,14 @@ export default function FeedbackPage() {
   };
 
   const handleRetry = () => {
-    fetchFeedback();
+    setRetryCount(prev => prev + 1);
   };
 
   if (status === 'loading' || loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <div className="w-12 h-12 border-4 border-[#6c5ce7] border-t-transparent rounded-full animate-spin mx-auto"></div>
           <p className="text-gray-600 mt-4">Loading feedback...</p>
         </div>
       </div>
@@ -70,20 +78,22 @@ export default function FeedbackPage() {
     return (
       <div className="container mx-auto px-4 py-8 max-w-2xl">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-red-700 mb-2"> Error</h2>
+          <h2 className="text-xl font-semibold text-red-700 mb-2">Error</h2>
           <p className="text-red-600">{error || 'No feedback available'}</p>
-          <div className="mt-4 flex space-x-4">
+          <div className="mt-4 flex gap-3">
             <button
               onClick={handleRetry}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              className="px-4 py-2 bg-[#6c5ce7] text-white rounded-lg hover:bg-[#5a4bd1] transition-colors flex items-center gap-2"
             >
+              <RefreshCw className="w-4 h-4" />
               Retry
             </button>
             <Link
               href="/dashboard"
-              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
             >
-              Go to Dashboard
+              <Home className="w-4 h-4" />
+              Dashboard
             </Link>
           </div>
         </div>
@@ -94,124 +104,177 @@ export default function FeedbackPage() {
   const overallFeedback = feedback.overallFeedback || feedback;
   const interviewData = feedback.interview || feedback;
 
+  const totalQuestions = interviewData.questions?.length || 0;
+  const answeredQuestions = interviewData.responses?.length || 0;
+  const score = overallFeedback.averageScore || 0;
+  const scoreColor = score >= 8 ? 'text-emerald-600' : score >= 6 ? 'text-blue-600' : score >= 4 ? 'text-amber-600' : 'text-red-600';
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800"> Interview Feedback</h1>
-
-      {/* Overall Score */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Overall Performance</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-blue-50 rounded-lg p-4 text-center">
-            <div className="text-3xl font-bold text-blue-600">
-              {overallFeedback.averageScore || 'N/A'}
-            </div>
-            <div className="text-sm text-gray-600">Average Score</div>
-          </div>
-          <div className="bg-green-50 rounded-lg p-4 text-center">
-            <div className="text-3xl font-bold text-green-600">
-              {interviewData.responses?.length || 0}
-            </div>
-            <div className="text-sm text-gray-600">Questions Answered</div>
-          </div>
-          <div className="bg-purple-50 rounded-lg p-4 text-center">
-            <div className="text-3xl font-bold text-purple-600">
-              {interviewData.questions?.length || 0}
-            </div>
-            <div className="text-sm text-gray-600">Total Questions</div>
-          </div>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Interview Feedback</h1>
+          <p className="text-sm text-gray-500">
+            {interviewData.jobRole || 'Interview'} • {interviewData.experience || 0} years experience
+          </p>
         </div>
-
-        {/* Overall Summary */}
-        {overallFeedback.overallSummary && (
-          <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <h4 className="font-semibold text-gray-700 mb-2"> Summary</h4>
-            <p className="text-gray-600">{overallFeedback.overallSummary}</p>
-          </div>
-        )}
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+        >
+          <Home className="w-4 h-4" />
+          Dashboard
+        </Link>
       </div>
 
-      {/* Strengths */}
-      {overallFeedback.strengths && overallFeedback.strengths.length > 0 && (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-4">
-          <h3 className="text-lg font-semibold text-green-600 mb-3"> Strengths</h3>
-          <ul className="list-disc list-inside space-y-1">
-            {overallFeedback.strengths.map((strength, index) => (
-              <li key={index} className="text-gray-700">{strength}</li>
-            ))}
-          </ul>
+      {/* Overall Score Card */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-500">Overall Score</p>
+            <div className="flex items-end gap-2">
+              <span className={`text-4xl font-bold ${scoreColor}`}>
+                {score || '—'}
+              </span>
+              <span className="text-gray-400 text-sm">/ 10</span>
+            </div>
+            <p className="text-sm text-gray-500 mt-1">
+              {answeredQuestions} of {totalQuestions} questions answered
+            </p>
+          </div>
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#6c5ce7] to-[#fd79a8] flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+            {score || '—'}
+          </div>
+        </div>
+      </div>
+
+      {/* Summary */}
+      {overallFeedback.overallSummary && (
+        <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6">
+          <p className="text-blue-800 text-sm">{overallFeedback.overallSummary}</p>
         </div>
       )}
 
-      {/* Weaknesses */}
-      {overallFeedback.weaknesses && overallFeedback.weaknesses.length > 0 && (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-4">
-          <h3 className="text-lg font-semibold text-red-600 mb-3"> Areas for Improvement</h3>
-          <ul className="list-disc list-inside space-y-1">
-            {overallFeedback.weaknesses.map((weakness, index) => (
-              <li key={index} className="text-gray-700">{weakness}</li>
-            ))}
-          </ul>
+      {/* Strengths & Weaknesses */}
+      <div className="grid md:grid-cols-2 gap-4 mb-6">
+        <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <CheckCircle className="w-5 h-5 text-emerald-600" />
+            <h3 className="font-semibold text-emerald-800">Strengths</h3>
+          </div>
+          {overallFeedback.strengths && overallFeedback.strengths.length > 0 ? (
+            <ul className="space-y-1.5">
+              {overallFeedback.strengths.map((item, index) => (
+                <li key={index} className="text-sm text-emerald-700 flex items-start gap-2">
+                  <span className="text-emerald-400">•</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-emerald-600">No strengths recorded</p>
+          )}
         </div>
-      )}
+
+        <div className="bg-red-50 border border-red-100 rounded-xl p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <XCircle className="w-5 h-5 text-red-600" />
+            <h3 className="font-semibold text-red-800">Areas for Improvement</h3>
+          </div>
+          {overallFeedback.weaknesses && overallFeedback.weaknesses.length > 0 ? (
+            <ul className="space-y-1.5">
+              {overallFeedback.weaknesses.map((item, index) => (
+                <li key={index} className="text-sm text-red-700 flex items-start gap-2">
+                  <span className="text-red-400">•</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-red-600">No weaknesses identified</p>
+          )}
+        </div>
+      </div>
 
       {/* Suggestions */}
       {overallFeedback.suggestions && overallFeedback.suggestions.length > 0 && (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h3 className="text-lg font-semibold text-blue-600 mb-3"> Suggestions for Improvement</h3>
-          <ul className="list-disc list-inside space-y-1">
-            {overallFeedback.suggestions.map((suggestion, index) => (
-              <li key={index} className="text-gray-700">{suggestion}</li>
+        <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <Lightbulb className="w-5 h-5 text-amber-600" />
+            <h3 className="font-semibold text-amber-800">Suggestions</h3>
+          </div>
+          <ul className="space-y-1.5">
+            {overallFeedback.suggestions.map((item, index) => (
+              <li key={index} className="text-sm text-amber-700 flex items-start gap-2">
+                <span className="text-amber-400">•</span>
+                {item}
+              </li>
             ))}
           </ul>
         </div>
       )}
 
-      {/* Individual Question Feedback */}
-      {interviewData.responses && interviewData.responses.length > 0 && (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">📋 Question-by-Question Breakdown</h3>
-          {interviewData.responses.map((response, index) => (
-            <div key={index} className="border-b border-gray-200 last:border-0 py-4">
-              <div className="flex justify-between items-start mb-2">
-                <h4 className="font-medium text-gray-800">Question {index + 1}</h4>
-                {response.feedback?.score && (
-                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                    Score: {response.feedback.score}/10
-                  </span>
-                )}
-              </div>
-              <p className="text-gray-600 text-sm mb-2">{response.question}</p>
-              <div className="bg-gray-50 rounded-lg p-3 text-sm">
-                <p className="text-gray-700"><span className="font-medium">Your Answer:</span> {response.answer}</p>
+      {/* Question Breakdown */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 className="font-semibold text-gray-800 mb-4">Question Breakdown</h3>
+        <div className="space-y-4">
+          {interviewData.responses && interviewData.responses.length > 0 ? (
+            interviewData.responses.map((response, index) => (
+              <div key={index} className="border-b border-gray-100 last:border-0 pb-4 last:pb-0">
+                <div className="flex items-start justify-between mb-1">
+                  <p className="text-sm font-medium text-gray-700">
+                    Q{index + 1}: {response.question}
+                  </p>
+                  {response.feedback?.score && (
+                    <span className={`text-sm font-bold ${
+                      response.feedback.score >= 8 ? 'text-emerald-600' :
+                      response.feedback.score >= 6 ? 'text-blue-600' :
+                      response.feedback.score >= 4 ? 'text-amber-600' :
+                      'text-red-600'
+                    }`}>
+                      {response.feedback.score}/10
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm text-gray-600 mt-1 bg-gray-50 p-2 rounded-lg">
+                  {response.answer}
+                </p>
                 {response.feedback?.strengths && (
-                  <p className="text-green-600 mt-1">✓ {response.feedback.strengths}</p>
+                  <p className="text-xs text-emerald-600 mt-1">✓ {response.feedback.strengths}</p>
                 )}
                 {response.feedback?.weaknesses && (
-                  <p className="text-red-600 mt-1">✗ {response.feedback.weaknesses}</p>
-                )}
-                {response.feedback?.suggestions && (
-                  <p className="text-blue-600 mt-1">💡 {response.feedback.suggestions}</p>
+                  <p className="text-xs text-red-600">✗ {response.feedback.weaknesses}</p>
                 )}
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-sm text-gray-500">No responses recorded</p>
+          )}
         </div>
-      )}
+      </div>
 
-      <div className="flex justify-between mt-8">
-        <Link
-          href="/dashboard"
-          className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          Back to Dashboard
-        </Link>
+      {/* Actions */}
+      <div className="flex flex-wrap gap-3 mt-6">
         <Link
           href="/interview/new"
-          className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          className="px-6 py-2.5 bg-[#6c5ce7] text-white rounded-lg hover:bg-[#5a4bd1] transition-colors text-sm font-medium"
         >
           Practice Again
         </Link>
+        <Link
+          href="/dashboard"
+          className="px-6 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
+        >
+          Go to Dashboard
+        </Link>
+        <button
+          onClick={handleRetry}
+          className="px-6 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium flex items-center gap-2"
+        >
+          <RefreshCw className="w-4 h-4" />
+          Refresh
+        </button>
       </div>
     </div>
   );

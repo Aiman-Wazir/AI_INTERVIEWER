@@ -1,68 +1,149 @@
-{interviews.slice(0, 5).map((interview) => (
-  <div key={interview.id} className="bg-white/50 border border-[#f0e8e0] rounded-xl p-4 hover:shadow-sm hover:border-[#d4c8bd] transition-all duration-200">
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-      <Link
-        href={`/interview/${interview.id}`}
-        className="flex items-start sm:items-center gap-3 flex-1 group"
-      >
-        <div className="w-9 h-9 rounded-lg bg-[#6c5ce7]/10 flex items-center justify-center flex-shrink-0">
-          <Briefcase className="w-4 h-4 text-[#6c5ce7]" />
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import InterviewChat from '@/components/InterviewChat';
+
+export default function InterviewPage() {
+  const params = useParams();
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const [interviewData, setInterviewData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const interviewId = params.id;
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/');
+      return;
+    }
+
+    if (session && interviewId) {
+      fetchInterviewData();
+    }
+  }, [session, status, interviewId, router]);
+
+  const fetchInterviewData = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      
+      const response = await fetch(`/api/interview?action=get-status&interviewId=${interviewId}`);
+      const data = await response.json();
+      
+      console.log('📦 Interview data:', data);
+      
+      if (!data.success) {
+        setError(data.error || 'Failed to load interview');
+        return;
+      }
+      
+      if (!data.questions || data.questions.length === 0) {
+        setError('This interview has no questions. Please start a new one.');
+        return;
+      }
+      
+      // ✅ If interview is already completed, redirect to feedback
+      if (data.status === 'completed') {
+        console.log('✅ Interview already completed, redirecting to feedback...');
+        router.push(`/interview/${interviewId}/feedback`);
+        return;
+      }
+      
+      setInterviewData(data);
+    } catch (error) {
+      console.error('Error fetching interview:', error);
+      setError('Failed to load interview. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleComplete = () => {
+    console.log('🎉 Interview complete, redirecting to feedback...');
+    router.push(`/interview/${interviewId}/feedback`);
+  };
+
+  const handleStartNew = () => {
+    router.push('/interview/new');
+  };
+
+  if (status === 'loading' || loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-[#6c5ce7] border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-gray-600 mt-4">Loading interview...</p>
         </div>
-        <div>
-          <h3 className="text-sm font-medium text-[#1a1a2e] group-hover:text-[#6c5ce7] transition-colors">
-            {interview.jobRole || 'Untitled'}
-          </h3>
-          <div className="flex flex-wrap items-center gap-2 mt-0.5">
-            <span className="text-xs text-gray-400 flex items-center gap-1">
-              <Calendar className="w-3 h-3" />
-              {interview.startTime ? new Date(interview.startTime).toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric'
-              }) : 'N/A'}
-            </span>
-            <span className="text-xs text-gray-300">•</span>
-            <span className="text-xs text-gray-400">
-              {interview.responses?.length || 0}/{interview.questions?.length || 0}
-            </span>
-            <span className="text-xs text-gray-300">•</span>
-            {getStatusBadge(interview.status)}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-2xl">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+          <h2 className="text-xl font-semibold text-red-700 mb-2">Error</h2>
+          <p className="text-red-600">{error}</p>
+          <div className="mt-4 flex gap-3">
+            <button
+              onClick={handleStartNew}
+              className="px-4 py-2 bg-[#6c5ce7] text-white rounded-lg hover:bg-[#5a4bd1] transition-colors"
+            >
+              Start New Interview
+            </button>
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Go to Dashboard
+            </button>
           </div>
         </div>
-      </Link>
-      <div className="flex items-center gap-3 ml-12 sm:ml-0">
-        {interview.overallFeedback?.averageScore && (
-          <div className={`text-lg font-bold ${getScoreColor(interview.overallFeedback.averageScore)}`}>
-            {interview.overallFeedback.averageScore}
-          </div>
-        )}
-        <button
-          onClick={async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (confirm('Delete this interview?')) {
-              try {
-                const response = await fetch(`/api/interview?action=delete&interviewId=${interview.id}`);
-                if (response.ok) {
-                  fetchInterviews(); // Refresh the list
-                }
-              } catch (error) {
-                console.error('Error deleting interview:', error);
-              }
-            }
-          }}
-          className="text-gray-300 hover:text-red-500 transition-colors"
-          title="Delete interview"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 6h18" />
-            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-            <line x1="10" y1="11" x2="10" y2="17" />
-            <line x1="14" y1="11" x2="14" y2="17" />
-          </svg>
-        </button>
-        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#6c5ce7] group-hover:translate-x-0.5 transition-all" />
+      </div>
+    );
+  }
+
+  if (!interviewData) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <p className="text-gray-600">Interview not found</p>
+          <button
+            onClick={handleStartNew}
+            className="mt-4 px-4 py-2 bg-[#6c5ce7] text-white rounded-lg hover:bg-[#5a4bd1] transition-colors"
+          >
+            Start New Interview
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">
+            {interviewData.jobRole || 'Interview'} Interview
+          </h1>
+          <p className="text-gray-600">
+            {interviewData.experience || 0} years experience • Skills: {Array.isArray(interviewData.skills) ? interviewData.skills.join(', ') : interviewData.skills || 'N/A'}
+          </p>
+          <p className="text-sm text-gray-500 mt-1">
+            Progress: {interviewData.responses?.length || 0} / {interviewData.questions?.length || 0} questions answered
+          </p>
+        </div>
+        
+        <InterviewChat
+          interviewId={interviewId}
+          jobRole={interviewData.jobRole || 'Developer'}
+          onComplete={handleComplete}
+        />
       </div>
     </div>
-  </div>
-))}
+  );
+}
