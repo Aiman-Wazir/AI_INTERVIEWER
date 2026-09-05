@@ -86,7 +86,7 @@ Role + Experience + Skills
 ## Run Locally
 
 ```bash
-git clone https://github.com/yourusername/skillpilot-ai.git
+git clone https://github.com/Aiman-Wazir/AI_INTERVIEWER
 cd skillpilot-ai
 npm install
 npm run dev
