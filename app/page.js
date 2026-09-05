@@ -198,10 +198,10 @@ export default function Home() {
   ];
 
   const stats = [
-    { icon: "👥", value: "10K+", label: "Users" },
-    { icon: "💬", value: "50K+", label: "Interviews" },
-    { icon: "🏆", value: "95%", label: "Satisfaction" },
-    { icon: "🕐", value: "24/7", label: "Available" }
+    // { icon: "", value: "10K+", label: "Users" },
+    // { icon: "💬", value: "50K+", label: "Interviews" },
+    // { icon: "🏆", value: "95%", label: "Satisfaction" },
+    // { icon: "🕐", value: "24/7", label: "Available" }
   ];
 
   return (
