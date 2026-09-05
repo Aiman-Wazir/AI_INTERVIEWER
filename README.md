@@ -1,36 +1,118 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SkillPilot AI
 
-## Getting Started
+<div align="center">
 
-First, run the development server:
+### AI-Powered Mock Interview Platform
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**Practice interviews • Get personalized AI feedback • Track your performance**
+
+SkillPilot AI is a full-stack AI mock interview platform that generates personalized interview questions based on a candidate's **role, experience, and skills**, then evaluates their answers and provides actionable feedback.
+
+</div>
+
+---
+
+## Features
+
+* **AI-Generated Interviews** — Personalized technical, behavioral, and situational questions
+* **Adaptive Questioning** — Questions tailored to role, experience, and skills
+* **AI Answer Evaluation** — 1–10 scoring with strengths, weaknesses, and improvement suggestions
+* **Performance Dashboard** — Track interview history, scores, and progress
+* **Authentication** — Google OAuth with NextAuth.js and Firebase
+* **Responsive UI** — Modern interface with glassmorphism, animations, and dark/light mode
+
+---
+
+## Tech Stack
+
+**Frontend**
+Next.js • React • Tailwind CSS • Framer Motion • Lucide React
+
+**AI & Backend**
+Groq API • Next.js API Routes • NextAuth.js
+
+**Database & Authentication**
+Firebase Firestore • Firebase Authentication • Google OAuth
+
+---
+
+## How It Works
+
+```text
+Role + Experience + Skills
+            ↓
+   AI Question Generation
+            ↓
+        User Answers
+            ↓
+       Groq AI Analysis
+            ↓
+ Score + Strengths + Weaknesses
+            ↓
+    Personalized Feedback
+            ↓
+     Performance Dashboard
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Screenshots
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Home Page
 
-## Learn More
+<img src="public/screenshots/home.png" alt="SkillPilot AI Home Page" width="100%"/>
 
-To learn more about Next.js, take a look at the following resources:
+### Sign In
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<img src="public/screenshots/signin.png" alt="SkillPilot AI Sign In" width="100%"/>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Dashboard
 
-## Deploy on Vercel
+<img src="public/screenshots/dashboard.png" alt="SkillPilot AI Dashboard" width="100%"/>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Interview Session
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<img src="public/screenshots/interview.png" alt="SkillPilot AI Interview Session" width="100%"/>
+
+### AI Feedback
+
+<img src="public/screenshots/feedback.png" alt="SkillPilot AI Feedback" width="100%"/>
+
+---
+
+## Run Locally
+
+```bash
+git clone https://github.com/yourusername/skillpilot-ai.git
+cd skillpilot-ai
+npm install
+npm run dev
+```
+
+Create a `.env.local` file with your Firebase, Google OAuth, NextAuth, and Groq API credentials.
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+---
+
+## Future Improvements
+
+* Voice-based interviews
+* Resume-based question generation
+* Speech analysis
+* Advanced interview analytics
+* Personalized interview preparation
+
+---
+
+<div align="center">
+
+**SkillPilot AI — Practice Smarter. Interview Better.**
+
+Built with Next.js, Firebase & AI.
+
+</div>
