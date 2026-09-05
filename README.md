@@ -65,21 +65,21 @@ Role + Experience + Skills
 
 ### Sign In
 
-<img src="public/screenshots/signin.png" alt="SkillPilot AI Sign In" width="100%"/>
+<img src="screenshots/signin.png" alt="SkillPilot AI Sign In" width="100%"/>
 
 ### Dashboard
 
-<img src="public/screenshots/dashboard3.png" alt="SkillPilot AI Dashboard" width="100%"/>
+<img src="screenshots/dashboard3.png" alt="SkillPilot AI Dashboard" width="100%"/>
 
 ### Interview Session
 
-<img src="public/screenshots/interview.png" alt="SkillPilot AI Interview Session" width="100%"/>
+<img src="screenshots/interview.png" alt="SkillPilot AI Interview Session" width="100%"/>
 
-<img src="public/screenshots/interview2.png" alt="SkillPilot AI Interview Session" width="100%"/>
+<img src="screenshots/interview2.png" alt="SkillPilot AI Interview Session" width="100%"/>
 
 ### AI Feedback
 
-<img src="public/screenshots/profile.png" alt="SkillPilot AI Profile" width="100%"/>
+<img src="screenshots/profile.png" alt="SkillPilot AI Profile" width="100%"/>
 
 ---
 
